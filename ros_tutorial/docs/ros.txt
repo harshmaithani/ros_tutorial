@@ -1,0 +1,321 @@
+ROS Tutorial
+------------------
+
+1. Reference            - http://wiki.ros.org/ROS/Tutorials
+2. Other references     - Cleartpath Robotics
+                        - Husarion 
+
+Pending Questions
+------------------
+1. 
+
+Things to cover 
+------------------
+1. All tutorials of ROS - http://wiki.ros.org/ROS/Tutorials
+2. Catkin build system  - http://wiki.ros.org/catkin
+3. CMakeLists.txt
+4. Remapping            - https://wiki.ros.org/Remapping%20Arguments
+5. Troubleshooting      - http://wiki.ros.org/ROS/Troubleshooting
+6. Forum for Q&A        - https://answers.ros.org/questions/
+7. Developer's Guide    - http://wiki.ros.org/DevelopersGuide
+8. ROS Styling Guide    - http://wiki.ros.org/CppStyleGuide
+7. roscpp               - http://wiki.ros.org/roscpp
+8. rospy                - http://wiki.ros.org/rospy
+9. Rviz                 - http://wiki.ros.org/rviz/UserGuide, http://wiki.ros.org/rviz
+10. actionlib           - http://wiki.ros.org/actionlib
+                          http://wiki.ros.org/actionlib_tutorials/Tutorials  
+10. tf                  - http://wiki.ros.org/tf
+11. Navigation Stack    - 
+12. Plugins             - http://wiki.ros.org/pluginlib
+13. Nodelets            - http://wiki.ros.org/nodelet
+
+Important ROS libraries or packages
+------------------
+1. ROS Control          - https://github.com/ros-controls
+2. ROS Navigation Stack - 
+3. gmapping             - 
+4. 
+
+Graph Concepts
+------------------
+1.  roscore                 -   Master + rosout + parameter server (parameter server will be introduced later)   
+2.  Master                  -   Name service for ROS (i.e. helps nodes find each other)
+3.  rosout                  -   ROS equivalent of stdout/stderr. Node which is always running.
+4.  Nodes                   -   A node is an executable that uses ROS to communicate with other nodes.
+5.  Messages                -   ROS data type used when subscribing or publishing to a topic. msg files are simple text files that describe the fields of a ROS message. They are used to generate source code for messages in different languages. 
+                                Reference - http://wiki.ros.org/rosmsg
+                                            http://wiki.ros.org/action/show/msg?action=show&redirect=ROS%2FMessage_Description_Language
+6.  Topics                  -   Nodes can publish messages to a topic as well as subscribe to a topic to receive messages.
+7.  Services                -   An srv file describes a service. It is composed of two parts: a request and a response. it becomes a header file.
+8.  Actions                 -   The actionlib stack provides a standardized interface for interfacing with preemptable tasks.
+                                Reference - http://wiki.ros.org/actionlib
+8.  parameters              -   A parameter server is a shared, multi-variate dictionary that is accessible via network APIs. 
+                                Reference - http://wiki.ros.org/Parameter%20Server, 
+8.  rospy                   -   Python client library
+9.  roscpp                  -   C++ client library
+                                Reference - http://wiki.ros.org/roscpp
+                        
+Project structure
+------------------
+Reference - http://wiki.ros.org/catkin/workspaces
+
+workspace_folder/                   --       WORKSPACE
+    src/                            --       SOURCE space
+        CMakeLists.txt              --       'Toplevel' CMake file, provided by catkin 
+        package_1
+            CMakeLists.txt          --       CMake build file (see catkin/CMakeLists.txt)                    Reference - http://wiki.ros.org/catkin/CMakeLists.txt
+            package.xml             --       Package catkin/package.xml                                      Reference - http://wiki.ros.org/catkin/package.xml
+            include/package_name    --       C++ include headers (make sure to export in the CMakeLists.txt) 
+            msg/                    --       Folder containing Message (msg) types
+            src/package_name/       --       Source files, especially Python source that are exported to other packages.  
+            srv/                    --       Folder containing Service (srv) types
+            scripts/                --       executable scripts
+            CHANGELOG.rst           --       Many packages will define a changelog which can be automatically injected into binary packaging and into the wiki page for the package 
+        package_2
+            CMakeLists.txt
+            package.xml 
+    build/                          --      BUILD space. Directory made automatically after $ catkin_make
+        CATKIN_IGNORE               --      Keeps catkin from walking this directory
+    devel/                          --      DEVELOPMENT SPACE (set by CATKIN_DEVEL_PREFIX)
+        bin/
+        etc/
+        include/
+        lib/
+        share/
+        .catkin
+        env.bash
+        setup.bash
+        setup.sh
+        ...
+    install/                        --      INSTALL SPACE (set by CMAKE_INSTALL_PREFIX)
+        bin/
+        etc/
+        include/
+        lib/
+        share/
+        .catkin             
+        env.bash
+        setup.bash
+        setup.sh
+        ...
+
+Commands
+------------------
+rosbash suite -
+    Reference                       - http://wiki.ros.org/ROS/Tutorials/NavigatingTheFilesystem
+
+$ roscd                             - change directory directly to a package or a stack.
+                                        picum@picumTD:~$ roscd sample
+                                        picum@picumTD:~/ros_tutorial_ws/src/sample$ 
+$ rospd                             - pushd equivalent of roscd
+$ rosd                              - lists directories in the directory-stack
+$ rosls                             - ls directly in a package by name rather than by absolute path. 
+                                        picum@picumTD:~$ rosls sample
+                                        CMakeLists.txt  docs  include  msg  package.xml  scripts  src  srv
+$ rosed                             - edit a file in a package
+$ roscp                             - copy a file from a package
+$ rosrun                            - run executables of a ros package 
+
+Normal command flow - 
+$ gedit ./bashrc                    - 
+$ catkin_init_workspace             - Make a catkin workspace 
+$ catkin_create_pkg                 - create a new package
+$ catkin_make                       - build a workspace of packages
+$ roscore                           - 
+$ source devel/setup.bash           - 
+$ printenv | grep ROS               - to check the ROS environment variables
+
+$ rosrun                            - $ rosrun [package_name] [node_name]
+$ rosrun rqt_graph rqt_graph        - rqt_graph creates a dynamic graph of what's going on in the system
+$ rosrun rqt_plot rqt_plot          - plot of data published on topics. 
+$ roslaunch [package] [filename.launch]     -  starts nodes as defined in a launch file. Reference - http://wiki.ros.org/ROS/Tutorials/Roslaunch%20tips%20for%20larger%20projects
+
+$ rostopic -h
+    rostopic bw                     - display bandwidth used by topic
+    rostopic echo                   - print messages to screen
+    rostopic hz                     - display publishing rate of topic    
+    rostopic list                   - print information about active topics
+    rostopic pub                    - publish data to topic
+    rostopic type                   - print topic type
+$ rostopic list -h
+    Usage: rostopic list [/topic]
+    Options:
+      -h, --help                    - show this help message and exit
+      -b BAGFILE, --bag=BAGFILE
+                                    - list topics in .bag file
+      -v, --verbose                 - list full details about each topic
+      -p                            - list only publishers
+      -s                            - list only subscribers
+$ rostopic pub [topic] [msg_type] [args]        - rostopic pub publishes data on to a topic currently advertised.
+                                                    $ rostopic pub -1 /turtle1/cmd_vel geometry_msgs/Twist -- '[2.0, 0.0, 0.0]' '[0.0, 0.0, 1.8]'
+                                                    These arguments are actually in YAML syntax, which is described more in the YAML command line documentation. 
+
+$ rosmsg show geometry_msgs/Twist               - show details of the msg. Reference - http://wiki.ros.org/rosmsg  
+$ rosmsg show sample/Num                        - see the details of our custom msg Num in the package sample. 
+$ rosmsg show Num                               - see the package in which Num is located 
+$ rosmsg list                                   - List all messages
+$ rosmsg md5                                    - Display message md5sum
+$ rosmsg package                                - List messages in a package
+$ rosmsg packages                               - List packages that contain messages
+
+$ rossrv show sample/AddTwoInts                 - see the details of our custom srv AddTwoInts in the package sample. 
+$ rossrv show AddTwoInts 
+
+$ rosnode list                      -
+$ rosnode info                      -
+
+$ rosservice list                   -
+    rosservice list                 -   print information about active services
+    rosservice call                 -   call the service with the provided args
+    rosservice type                 -   print service type
+    rosservice find                 -   find services by service type
+    rosservice uri                  -   print service ROSRPC uri  
+
+$ rosparam list                     -   rosparam allows you to store and manipulate data on the ROS Parameter Server.
+    rosparam set                    -   set parameter
+    rosparam get                    -   get parameter
+    rosparam load                   -   load parameters from file
+    rosparam dump                   -   dump parameters to file
+    rosparam delete                 -   delete parameter
+    rosparam list                   -   list parameter names
+      
+$ rospack                           - find and retrieve information about packages
+                                        picum@picumTD:/$ rospack find roscpp
+                                        /opt/ros/melodic/share/roscpp
+$ rospack depends1                  - find dependencies of package
+                                        picum@picumTD:~$ rospack depends1 sample
+                                        geometry_msgs
+                                        roscpp
+                                        rospy
+                                        std_msgs
+$ sudo rosdep init                  - 
+$ rosdep update                     - 
+$ rosdep install [package]          - install system dependencies of a package
+$ rqt                               - In rqt there is a plugin called "Introspection/Package Graph", which visualizes package dependencies as a graph 
+$ rosrun rqt_console rqt_console    - rqt_console attaches to ROS's logging framework to display output from nodes. rqt_logger_level allows us to change the verbosity level (DEBUG, WARN, INFO, and ERROR) of nodes as they run. 
+$ rosrun rqt_logger_level rqt_logger_level -
+    Fatal
+    Error
+    Warn
+    Info
+    Debug
+
+$ roscp rospy_tutorials AddTwoInts.srv srv/AddTwoInts.srv
+$ rosbag record -a                  - record all published Topics
+$ rosbag record -O <bagfile> topic1 topic2 - record selected topics 
+$ rosbag info <your bagfile>        - display bagfile information 
+$ time rosbag info demo.bag         - the time command will print how long each command takes 
+$ rosbag play <your bagfile>        - playback your bagfile 
+$ roswtf                            - 
+Ctrl+C                              - Sends a SIGINT and stops roscore
+rosout                              - name of the console log reporting mechanism in ROS. Reference - http://wiki.ros.org/rosout
+
+ROS Environment variables
+----------------------
+
+Check the environment variables
+    picum@picumTD:~/ros_tutorial_ws$ printenv | grep ROS
+    ROS_ETC_DIR=/opt/ros/melodic/etc/ros
+    ROS_ROOT=/opt/ros/melodic/share/ros
+    ROS_MASTER_URI=http://localhost:11311
+    ROS_VERSION=1
+    ROS_PYTHON_VERSION=2
+    ROS_PACKAGE_PATH=/opt/ros/melodic/share
+    ROSLISP_PACKAGE_DIRECTORIES=
+    ROS_DISTRO=melodic
+
+1. ROS_ROOT         -   ROS_ROOT sets the location where the ROS core packages are installed.
+                        $ export ROS_ROOT=/home/user/ros/ros
+                        $ export PATH=$ROS_ROOT/bin:$PATH
+
+2. ROS_MASTER_URI   -   ROS_MASTER_URI is a required setting that tells nodes where they can locate the master.
+                        $ export ROS_MASTER_URI=http://mia:11311/
+
+3. ROS_PACKAGE_PATH -   These ordered paths tell the ROS system where to search for more ROS packages.
+                        $ export ROS_PACKAGE_PATH=/home/user/ros/ros-pkg:/another/path
+
+4. PYTHONPATH       -   ROS requires that your PYTHONPATH be updated, even if you don't program in Python!
+                        $ export PYTHONPATH=$PYTHONPATH:$ROS_ROOT/core/roslib/src
+
+5. ROS_HOME         -   By default, ROS writes data to ~/.ros. This location can be changed by setting an optional ROS_HOME. You can also change the location of certain individual directories in ~/.ros (e.g. ROS_TEST_RESULTS_DIR, ROS_LOG_DIR). 
+
+6. ROS_LOG_DIR      -   By default, ROS writes internal log files to ROS_HOME/log. If this location is not writable to ROS, or if you wish for log files to be written elsewhere, set ROS_LOG_DIR to that path.
+
+7. ROS_TEST_RESULTS_DIR -   Directory that test results should be written to. 
+
+8. ROS_CACHE_TIMEOUT -      
+
+9. ROS_LOCATIONS    -       ROS_LOCATIONS is an optional environment variable that provides keyed names for useful locations. It is a : separated list of key-location pairs. Each key-location pair is separated by an =. For example:  
+                            $ export ROS_LOCATIONS="rospkg=/path/to/rospkg:stairpkg=/path/to/stairpkg"
+
+10. ROS_WORKSPACE   -       ROS_WORKSPACE is introduced by the rosinstall / rosws tools, it is set by setup.sh that is generated by these tools when creating a workspace. It points to the folder of the workspace and is used by the rosws command as a default target of the command.
+
+11. ROS_IP/ROS_HOSTNAME -   ROS_IP and ROS_HOSTNAME are optional environment variable that sets the declared network address of a ROS Node or tool
+
+12. ROS_NAMESPACE       -   ROS_NAMESPACE lets you push down a Node into a namespace.
+
+13. ROSCONSOLE_CONFIG_FILE  This is a roscpp-specific environment variable. rosconsole lets you define your own configuration file that will be used by log4cxx, defined by the ROSCONSOLE_CONFIG_FILE environment variable. Anything defined in this config file will override the default config file. 
+
+14. ROSCONSOLE_FORMAT   -   
+15. ROS_PYTHON_LOG_CONFIG_FILE
+16. ROS_BOOST_ROOT      -
+17. ROS_PARALLEL_JOBS   -
+18. ROS_LANG_DISABLE    -
+19. ROS_OS_OVERRIDE     - 
+
+Catkin build system
+-------------------
+Reference                       - http://wiki.ros.org/catkin
+
+Dependencies
+    - CMake
+    - Python
+        - catkin_pkg            - a python run time library 
+        - empy                  - a python template library 
+        - nose                  - a python testing framework 
+    - GTest                     - a cpp unit testing framework 
+    - GNU C++ compiler (g++)    - The GNU C++ compiler 
+
+You can resolve these dependencies on Ubuntu with this command:
+    $sudo apt-get install cmake python-catkin-pkg python-empy python-nose python-setuptools libgtest-dev build-essential
+
+Network connectivity
+--------------------
+Reference - http://wiki.ros.org/ROS/Tutorials/MultipleMachines
+            http://wiki.ros.org/ROS/NetworkSetup
+            http://www.faqs.org/docs/securing/chap9sec95.html
+
+Steps
+-------------------
+1. Install ROS (by Open Source Robotics Foundation)
+    Reference - http://wiki.ros.org/noetic/Installation/Ubuntu
+    Configure repositories
+    Set up sources.list
+    Set up keys
+    Installation 
+    Environment setup
+
+2. Create a workspace
+    $ source /opt/ros/noetic/setup.bash
+    $ mkdir -p ~/ros_tutorial_ws/src
+    $ cd ~/ros_tutorial_ws/
+    $ catkin_make
+    $ echo $ROS_PACKAGE_PATH                    To make sure ROS_PACKAGE_PATH environment variable includes the directory you're in.   
+
+3. Create a package
+    Reference                   -   http://wiki.ros.org/catkin/Tutorials/CreatingPackage
+    $ picum@PCM1820:~/ros_tutorial_ws/src$ catkin_create_pkg sample std_msgs geometry_msgs rospy roscpp
+
+    To view the first-order dependencies,use the command below - 
+
+    picum@PCM1820:~/ros_tutorial_ws$ rospack depends1 sample
+    geometry_msgs
+    roscpp
+    rospy
+    std_msgs
+
+    To view all the dependencies - 
+
+    picum@PCM1820:~/ros_tutorial_ws$ rospack depends1 sample
+
+3. 
